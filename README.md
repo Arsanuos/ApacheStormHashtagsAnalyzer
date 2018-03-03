@@ -1,6 +1,6 @@
 # Apache Storm Hashtags Analyzer
 
-An Apache storm analyzer for top 5 hashtags in each country.
+An Apache storm analyzer for top 5 hashtags in each country using mongoDB for geoloaction calculations and heavy hitters for counting streams.
 
 # Work flow
 * Tweets source is twitter api (twitter 4j) is used to get tweet body and the geolocation information.
