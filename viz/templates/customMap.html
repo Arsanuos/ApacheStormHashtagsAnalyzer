@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<meta charset = 'utf-8'>
+<html>
+<head>
+
+
+</head>
+<body>
+  <script src="../static/d3.v3.min.js"></script>
+  <script src="../static/topojson.v1.min.js"></script>
+  <script src="../static/datamaps.world.min.js"></script>
+  <div id="container" style="position: relative; width: 900px; height: 600px;"></div>
+  <script>
+      var source = new EventSource('/stream');
+      var curTable = {};
+      var prevTable = {};
+      var basic_choropleth = new Datamap({
+      element: document.getElementById("container"),
+      projection: 'mercator',
+      fills: {
+        defaultFill: "#ABDDA4",
+        authorHasTraveledTo: "#fa0fa0"
+      },
+      "geographyConfig": {
+          "popupTemplate":  function(geography){
+          //  console.log(curTable[geography.properties.name]);
+          //  console.log(curTable);
+            if(curTable[geography.properties.name] != undefined){
+              var hashtagsList = curTable[geography.properties.name].split(",");
+            //  console.log(ul);
+              var ul = "<ul>";
+              for(var i = 0 ;i < hashtagsList.length; i++){
+                var li = "<li>"+ hashtagsList[i] +"</li>";
+                ul += li;
+              }
+              ul += "</ul>";
+              return '<div class=hoverinfo><strong>' + geography.properties.name + '</strong>'+ hashtagsList +'</div>';
+
+            }else{
+              return '<div class=hoverinfo><strong>' + geography.properties.name  + '</strong></div>';
+            }
+          }
+      } });
+
+      var countryAndcountryIDTable = function(){
+        var countries = Datamap.prototype.worldTopo.objects.world.geometries;
+        var data = {};
+        for (var i = 0, j = countries.length; i < j; i++) {
+          data[countries[i].properties.name] = countries[i].id;
+          //console.log(countries[i].properties.name);
+        }
+        return data;
+      }
+
+      source.onmessage = function (event) {
+        var country = event.data.substring(0, event.data.indexOf("|"));
+        var hashtags = event.data.substring(event.data.indexOf(',') + 1, event.data.length);
+        curTable[country] = hashtags;
+        console.log("NEW DATA IS HERE " + event.data);
+        console.log(country);
+        console.log(hashtags);
+        console.log("--------------------------")
+      };
+
+      var colors = d3.scale.category10();
+
+      window.setInterval(function() {
+        var changed = [];
+        var i = 0;
+        for(var key in curTable){
+          if(curTable[key] != prevTable[key]){
+            changed[countryAndcountryIDTable()[key]] = colors(Math.random() * 100);
+            i++;
+            prevTable[key] = curTable[key];
+          }
+        }
+        var changedID = {};
+        //get if there is any update then update the countries of it only.
+
+      basic_choropleth.updateChoropleth(changed);
+    }, 2000);
+
+  </script>
+</body>
+
+</html>
