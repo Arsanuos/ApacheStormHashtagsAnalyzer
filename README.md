@@ -11,3 +11,13 @@ An Apache storm analyzer for top 5 hashtags in each country.
 * Finally visualize the result using d3 and flask python server.
 
 You can find many maps code [here](http://datamaps.github.io/)
+
+# Sample run
+
+![First img](https://github.com/Arsanuos/ApacheStormHashtagsAnalyzer/blob/master/one.PNG)
+
+![Second img](https://github.com/Arsanuos/ApacheStormHashtagsAnalyzer/blob/master/two.PNG)
+
+![Third img](https://github.com/Arsanuos/ApacheStormHashtagsAnalyzer/blob/master/three.PNG)
+
+![Fourth img](https://github.com/Arsanuos/ApacheStormHashtagsAnalyzer/blob/master/four.PNG)
